@@ -46,13 +46,18 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Set Lowercase Image Name
+        run: |
+          IMAGE="ghcr.io/$(echo "${{ github.repository }}" | tr '[:upper:]' '[:lower:]'):latest"
+          echo "IMAGE_NAME=$IMAGE" >> $GITHUB_ENV
+
       - name: Build Docker Image
-        run: docker build -t ghcr.io/${{ github.repository }}:latest .
+        run: docker build -t ${{ env.IMAGE_NAME }} .
 
       - name: Container Vulnerability Scan (Trivy)
         uses: aquasecurity/trivy-action@master
         with:
-          image-ref: ghcr.io/${{ github.repository }}:latest
+          image-ref: ${{ env.IMAGE_NAME }}
           format: "table"
           severity: "CRITICAL,HIGH"
 
@@ -64,4 +69,5 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Push Docker Image to GHCR (Continuous Delivery)
-        run: docker push ghcr.io/${{ github.repository }}:latest
+        run: docker push ${{ env.IMAGE_NAME }}
+        run: docker push ${{ env.IMAGE_NAME }}
