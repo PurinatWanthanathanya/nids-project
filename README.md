@@ -176,9 +176,3 @@ docker compose up --build -d
 
 
 ---
-
-## 9. Full Documentation Guides
-
-* 📖 **[คู่มือการติดตั้งและการรันแล็บ (Lab Setup & Deployment Guide)](docs/setup.md)**: ขั้นตอนการตั้งค่า VM, การเปิด venv, การใช้สิทธิ์ Root, และการรันสคริปต์ Benchmark บน Kali Linux
-* 🧠 **[คู่มือสถาปัตยกรรมและการทำงานของโค้ด (Understanding Code & Architecture)](docs/understanding%20code.md)**: เจาะลึกอัลกอริทึมการตรวจจับ, การทำงานของ Double-Queue Pipeline, การจัดการ Memory และไฟล์ Config
-```
