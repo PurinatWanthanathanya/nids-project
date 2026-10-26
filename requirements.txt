@@ -1,0 +1,8 @@
+scapy>=2.5.0
+PyYAML>=6.0
+requests>=2.31.0
+Flask>=3.0.0
+Werkzeug>=3.0.0
+pytest>=8.0.0
+flake8>=7.0.0
+bandit>=1.7.0

@@ -1,0 +1,27 @@
+# Virtual Environments
+venv/
+env/
+.env/
+ENV/
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Pytest & Testing Cache
+.pytest_cache/
+.coverage
+htmlcov/
+
+# SQLite temporary and journal files
+*.db-shm
+*.db-wal
+*.db-journal
+
+# OS & Editor Files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+

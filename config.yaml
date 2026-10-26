@@ -1,0 +1,35 @@
+network:
+  interface: "eth0"
+  bpf_filter: "tcp or arp"
+  packet_queue_max: 2000
+  event_queue_max: 500
+
+state_management:
+  max_state_entries: 10000      # เพดานจำนวน IP สูงสุดใน RAM ป้องกัน RAM เต็มจาก --rand-source
+  cleanup_interval_sec: 10      # ความถี่ในการล้างข้อมูลเก่าที่หมดอายุ (วินาที)
+
+detection:
+  # 1. Port Scan (MITRE T1046)
+  port_scan:
+    window_sec: 5               # ช่วงเวลาที่นับ (5 วินาที)
+    port_threshold: 15          # ถ้า 1 IP ยิงหาเกิน 15 พอร์ตที่ไม่ซ้ำกันภายใน 5 วินาที = Alert
+
+  # 2. SYN Flood (MITRE T1499.001)
+  syn_flood:
+    window_sec: 1               # ช่วงเวลาที่นับ (1 วินาที)
+    src_syn_threshold: 50       # SYN จาก IP เดียวเกิน 50 ครั้ง/วินาที = Alert
+    dst_syn_threshold: 100      # SYN รวมทุก IP ที่พุ่งเป้ามาที่เครื่องเดียวเกิน 100 ครั้ง/วินาที (กัน --rand-source)
+    min_unacked_ratio: 0.8      # สัดส่วน SYN ที่ไม่มี ACK ตอบกลับ ต้องเกิน 80%
+
+  # 3. ARP Spoofing (MITRE T1557.002)
+  arp_spoofing:
+    learning_duration_sec: 30   # เวลาเรียนรู้ตาราง IP->MAC ตอนเริ่มระบบ (ตั้งเป็น 0 ตอนรัน pytest)
+    trusted_hosts:              # Whitelist IP:MAC ที่เชื่อถือได้แน่นอน (เช่น Host IP)
+      "192.168.56.1": "0a:00:27:00:00:00"
+
+alerting:
+  cooldown_sec: 300             # แจ้งเตือนซ้ำสำหรับ (src_ip, attack_type) เดิมได้ไม่เกิน 1 ครั้งใน 5 นาที
+  sqlite_db_path: "data/nids_events.db"
+  telegram:
+    enabled: false              # เปิดเป็น true เมื่อใส่ Token จริงในขั้นถัดไป
+    timeout_sec: 5.0

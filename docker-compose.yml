@@ -1,0 +1,30 @@
+services:
+  nids-sensor:
+    build: .
+    container_name: nids-sensor
+    network_mode: "host"
+    cap_add:
+      - NET_RAW
+      - NET_ADMIN
+    volumes:
+      - ./data:/app/data
+      - ./config.yaml:/app/config.yaml:ro
+    environment:
+      - TELEGRAM_BOT_TOKEN=${TELEGRAM_BOT_TOKEN:-}
+      - TELEGRAM_CHAT_ID=${TELEGRAM_CHAT_ID:-}
+    command: ["python", "src/sniffer.py", "--iface", "enp0s3"]
+    restart: unless-stopped
+
+  nids-dashboard:
+    build: .
+    container_name: nids-dashboard
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./data:/app/data
+      - ./config.yaml:/app/config.yaml:ro
+    environment:
+      - NIDS_ADMIN_USER=${NIDS_ADMIN_USER:-admin}
+      - NIDS_ADMIN_PASS=${NIDS_ADMIN_PASS:-nids2026}
+    command: ["python", "src/dashboard.py", "--host", "0.0.0.0", "--port", "5000"]
+    restart: unless-stopped
